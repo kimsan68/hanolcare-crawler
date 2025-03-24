@@ -162,16 +162,16 @@ if importlib.util.find_spec("konlpy") is not None:
                         logger.info("JPype JVM 초기화 성공")
                     except Exception as jvm_e:
                         logger.error(f"JVM 시작 오류: {str(jvm_e)}")
-                            
-                            # 마지막 수단: 직접 경로 지정 시도
-                            try:
-                                if os.environ.get('JAVA_HOME'):
-                                    alt_jvm_path = os.path.join(os.environ['JAVA_HOME'], 'lib', 'server', 'libjvm.so')
-                                    if os.path.exists(alt_jvm_path):
-                                        jpype1.startJVM(alt_jvm_path, "-Dfile.encoding=UTF-8", convertStrings=True)
-                                        logger.info(f"대체 경로로 JVM 초기화 성공: {alt_jvm_path}")
-                            except Exception as alt_jvm_e:
-                                logger.error(f"대체 경로 JVM 시작 오류: {str(alt_jvm_e)}")
+                        
+                        # 마지막 수단: 직접 경로 지정 시도
+                        try:
+                            if os.environ.get('JAVA_HOME'):
+                                alt_jvm_path = os.path.join(os.environ['JAVA_HOME'], 'lib', 'server', 'libjvm.so')
+                                if os.path.exists(alt_jvm_path):
+                                    jpype1.startJVM(alt_jvm_path, "-Dfile.encoding=UTF-8", convertStrings=True)
+                                    logger.info(f"대체 경로로 JVM 초기화 성공: {alt_jvm_path}")
+                        except Exception as alt_jvm_e:
+                            logger.error(f"대체 경로 JVM 시작 오류: {str(alt_jvm_e)}")
                     else:
                         logger.info("JVM이 이미 실행 중입니다.")
             except ImportError:
@@ -1758,9 +1758,9 @@ class InteractiveCLI:
     def print_header(self):
         """프로그램 헤더 출력"""
         header = """
-┌─────────────────────────────────────────────┐
-│            정부24 민원 수집 프로그램           │
-└─────────────────────────────────────────────┘
+
+            [정부24 민원 수집 프로그램]            
+
         """
         print(self.colorize(header, Colors.HEADER + Colors.BOLD))
     
@@ -1978,30 +1978,15 @@ class InteractiveCLI:
     def show_help(self):
         """도움말 표시"""
         help_text = """
-┌─────────────────────────────────────────────────────────────────┐
-│                      정부24 민원 수집 도움말                        │
-├─────────────────────────────────────────────────────────────────┤
-│ 크롤링 모드:                                                      │
-│  - 전체 페이지: 모든 민원 페이지를 수집합니다.                          │
-│  - 특정 페이지: 지정한 페이지만 수집합니다.                             │
-│  - 테스트 모드: 샘플 URL로 기능을 테스트합니다.                         │
-│  - 특정 URL: 입력한 URL만 처리합니다.                                │
-├─────────────────────────────────────────────────────────────────┤
-│ 출력 경로:                                                        │
-│  민원 데이터가 저장될 경로를 지정합니다.                                │
-├─────────────────────────────────────────────────────────────────┤
-│ 병렬 처리:                                                        │
-│  동시에 처리할 작업 수를 조절합니다. 값이 클수록 빠르지만                   │ 
-│  시스템 리소스와 네트워크 부하가 커집니다.                               │
-├─────────────────────────────────────────────────────────────────┤
-│ 텍스트 분석:                                                       │
-│  KoNLPy와 NLTK를 사용하여 민원 텍스트의 품질을 개선합니다.                │
-│  한국어 처리를 위해 KoNLPy 설치가 필요합니다.                           │
-├─────────────────────────────────────────────────────────────────┤
-│ 배치 크기:                                                        │
-│  한 번에 처리할 민원 항목 수입니다. 값이 크면 메모리 사용량이               │
-│  증가하지만 처리 속도가 빨라질 수 있습니다.                              │
-└─────────────────────────────────────────────────────────────────┘
+│ 크롤링 모드: │
+│ 전체 페이지: │
+│ 특정 페이지: │
+│ 테스트 모드: │
+│ 지정크롤링 : │
+│ 정보출력길 : │
+│ 동시진행함 : |                                                        
+│  텍스트분석: │
+│  배치가용성: │
 
 필요 패키지 설치:
   pip install -r requirements.txt
