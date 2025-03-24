@@ -1,0 +1,39 @@
+# 가상환경
+.venv/
+venv/
+env/
+ENV/
+
+# 데이터 폴더
+data/
+
+# 파이썬 캐시 파일
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 로그 파일
+*.log
+logs/
+
+# 임시 파일
+*.tmp
+.DS_Store
+
+# 개인 설정 파일
+.env
+config.ini
+secrets.json
+credentials.json
+
+# IDE 관련 파일
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 빌드 산출물
+dist/
+build/
+*.egg-info/

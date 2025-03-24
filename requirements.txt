@@ -1,0 +1,12 @@
+# 정부24 민원 크롤러 필수 패키지
+requests>=2.25.0
+beautifulsoup4>=4.9.3
+tqdm>=4.50.0
+
+# 웹 브라우저 자동화 (필수)
+playwright>=1.30.0
+
+# 텍스트 분석 패키지 (선택)
+nltk>=3.7.0
+konlpy>=0.6.0  # 한국어 자연어 처리
+JPype1>=1.4.0  # Java 브릿지 (konlpy에 필요)
