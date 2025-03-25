@@ -26,4 +26,4 @@ jobs:
       env:
         GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
       run: |
-        python src/crawler.py
+        python src/crawler.py --auto 
