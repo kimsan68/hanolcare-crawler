@@ -2310,7 +2310,15 @@ def main():
     parser.add_argument("--workers", type=int, default=0, help="병렬 처리에 사용할 워커 수 (0=자동)")
     parser.add_argument("--nlp", action="store_true", help="텍스트 분석 강화 모드 사용")
     parser.add_argument("--cli", action="store_true", help="대화형 CLI 모드로 실행")
+    parser.add_argument("--auto", action="store_true", help="비대화형 자동 실행 모드 (GitHub Actions용)")
     args = parser.parse_args()
+    
+    # 자동 실행 모드가 활성화된 경우 (GitHub Actions 등)
+    if args.auto:
+        logger.info("자동 실행 모드로 크롤링을 시작합니다 (비대화형)")
+        set_nlp_enabled(args.nlp)
+        run_crawler_with_args(args)
+        return
     
     # 대화형 CLI 모드 여부 확인
     if args.cli or len(sys.argv) == 1:  # 인자가 없거나 --cli 옵션이 있으면 대화형 모드 실행
