@@ -707,11 +707,12 @@ def get_page_url(base_url, page_number):
         return f"{base_url}&pageIndex={page_number}"
     return f"{base_url}?pageIndex={page_number}"
 
-def save_to_csv(minwon_list, filename="정부24_민원목록.csv"):
+def save_to_csv(minwon_list, filename="정부24_민원목록.csv", output_dir=None):
     """민원 목록을 CSV 파일로 저장하는 함수 (개선된 필드 포함)"""
-    desktop_path = os.path.expanduser("~/Desktop/data")
-    os.makedirs(desktop_path, exist_ok=True)
-    file_path = os.path.join(desktop_path, filename)
+    if output_dir is None:
+        output_dir = os.path.expanduser("~/Desktop/data")
+    os.makedirs(output_dir, exist_ok=True)
+    file_path = os.path.join(output_dir, filename)
     
     # 필드 목록 확장 (HTML 분석 기반)
     fieldnames = [
@@ -1578,11 +1579,11 @@ def retry_process_minwon(minwon, max_retries=3):
     
     return minwon
 
-def save_checkpoint(minwon_list, filename="진행상황_checkpoint.csv"):
+def save_checkpoint(minwon_list, filename="진행상황_checkpoint.csv", output_dir=None):
     """중간 작업 상태 저장"""
     try:
         logger.info(f"중간 작업 상태 저장 중... ({len(minwon_list)}개 항목)")
-        save_to_csv(minwon_list, filename)
+        save_to_csv(minwon_list, filename, output_dir)
         logger.info(f"체크포인트 저장 완료: {filename}")
     except Exception as e:
         logger.error(f"체크포인트 저장 실패: {str(e)}")
@@ -2191,10 +2192,10 @@ def run_crawler_with_args(args):
             if not TQDM_AVAILABLE:
                 logger.info(f"진행 상황: 성공 {stats['성공']}건, 실패 {stats['실패']}건, 경과시간: {elapsed/60:.1f}분")
             
-            # 중간 결과 저장 (배치당 한 번)
+            # 중간 결과 저장 (배치당 한 번) - 매번 같은 파일에 덮어씀
             if batch_idx % 2 == 0 or batch_idx == len(batches):
-                checkpoint_file = os.path.join(output_dir, f"정부24_민원_진행상황_{batch_idx}of{len(batches)}.csv")
-                save_checkpoint(processed_minwons, checkpoint_file)
+                checkpoint_file = "정부24_민원_진행상황.csv"  # 고정된 파일명 사용
+                save_checkpoint(processed_minwons, checkpoint_file, output_dir)
         
         # 최종 통계 계산
         stats["처리시간"] = time.time() - stats["시작시간"]
@@ -2205,17 +2206,17 @@ def run_crawler_with_args(args):
             processed_minwons = filter_duplicate_minwons(processed_minwons)
             logger.info(f"필터링 후 총 {len(processed_minwons)}개 민원 항목 남음")
         
-        # 결과 저장
-        output_file = os.path.join(output_dir, "정부24_민원목록.csv")
-        save_to_csv(processed_minwons, output_file)
-        logger.info(f"모든 민원 데이터가 저장되었습니다: {output_file}")
+        # 결과 저장 - 항상 같은 파일명 사용
+        output_file = "정부24_민원목록.csv"
+        save_to_csv(processed_minwons, output_file, output_dir)
+        logger.info(f"모든 민원 데이터가 저장되었습니다: {os.path.join(output_dir, output_file)}")
         
-        # 오류 목록 별도 저장
+        # 오류 목록 별도 저장 - 항상 같은 파일명 사용
         error_items = [m for m in processed_minwons if "정상" not in m.get("오류여부", "") and "성공" not in m.get("오류여부", "")]
         if error_items:
-            error_file = os.path.join(output_dir, "정부24_민원목록_오류.csv")
-            save_to_csv(error_items, error_file)
-            logger.info(f"오류 항목 {len(error_items)}개를 별도 저장했습니다: {error_file}")
+            error_file = "정부24_민원목록_오류.csv"
+            save_to_csv(error_items, error_file, output_dir)
+            logger.info(f"오류 항목 {len(error_items)}개를 별도 저장했습니다: {os.path.join(output_dir, error_file)}")
         
         # 최종 통계 출력
         logger.info("=" * 50)
@@ -2231,11 +2232,11 @@ def run_crawler_with_args(args):
         elapsed = time.time() - stats["시작시간"]
         logger.warning("사용자가 작업을 중단했습니다.")
         
-        # 현재까지의 결과 저장
+        # 현재까지의 결과 저장 - 고정된 파일명 사용
         if processed_minwons:
-            interrupt_file = os.path.join(output_dir, "정부24_민원목록_중단됨.csv")
-            save_to_csv(processed_minwons, interrupt_file)
-            logger.info(f"중단 시점까지의 {len(processed_minwons)}개 결과를 저장했습니다: {interrupt_file}")
+            interrupt_file = "정부24_민원목록_중단됨.csv"
+            save_to_csv(processed_minwons, interrupt_file, output_dir)
+            logger.info(f"중단 시점까지의 {len(processed_minwons)}개 결과를 저장했습니다: {os.path.join(output_dir, interrupt_file)}")
         
         # 중단 시점의 통계 출력
         logger.info("=" * 50)
@@ -2247,11 +2248,11 @@ def run_crawler_with_args(args):
         # 예상치 못한 오류 발생
         logger.error(f"프로그램 실행 중 오류 발생: {str(e)}")
         
-        # 현재까지의 결과 저장
+        # 현재까지의 결과 저장 - 고정된 파일명 사용
         if processed_minwons:
-            error_file = os.path.join(output_dir, "정부24_민원목록_오류발생.csv")
-            save_to_csv(processed_minwons, error_file)
-            logger.info(f"오류 발생 시점까지의 {len(processed_minwons)}개 결과를 저장했습니다: {error_file}")
+            error_file = "정부24_민원목록_오류발생.csv"
+            save_to_csv(processed_minwons, error_file, output_dir)
+            logger.info(f"오류 발생 시점까지의 {len(processed_minwons)}개 결과를 저장했습니다: {os.path.join(output_dir, error_file)}")
         
         # 스택 트레이스 출력
         logger.error("상세 오류 정보:")
