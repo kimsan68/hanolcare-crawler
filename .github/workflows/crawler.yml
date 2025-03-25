@@ -26,4 +26,11 @@ jobs:
       env:
         GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
       run: |
-        python src/crawler.py --auto 
+        python src/crawler.py --auto
+        
+    - name: 크롤링 CSV 파일 아티팩트로 업로드하기
+      uses: actions/upload-artifact@v4
+      with:
+        name: crawled-data-csv
+        path: |
+          data/raw_csv/*.csv
