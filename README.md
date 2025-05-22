@@ -53,7 +53,7 @@ bash scripts/java_setup.sh
 가장 쉬운 방법은 대화형 CLI 모드를 사용하는 것입니다:
 
 ```bash
-python src/crawler.py
+python -m hanolcare_crawler
 ```
 
 또는
@@ -74,7 +74,7 @@ bash scripts/run.sh
 특정 옵션으로 직접 실행하려면:
 
 ```bash
-python src/crawler.py --output ~/data --workers 5 --nlp
+python -m hanolcare_crawler --output ~/data --workers 5 --nlp
 ```
 
 #### 주요 옵션

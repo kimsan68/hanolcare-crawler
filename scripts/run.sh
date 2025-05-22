@@ -4,7 +4,7 @@
 
 # 디렉토리 경로 설정
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd "$SCRIPT_DIR"
+cd "$SCRIPT_DIR/.."
 
 # 필요한 패키지 확인
 check_packages() {
@@ -142,7 +142,7 @@ main() {
     check_java
     
     echo "크롤러를 시작합니다..."
-    python3 crawler.py --cli
+    python3 -m hanolcare_crawler --cli
 }
 
 # 스크립트 실행

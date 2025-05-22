@@ -15,7 +15,6 @@ import traceback
 from html import unescape
 
 # 로깅 설정
-import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -25,28 +24,6 @@ OKT_AVAILABLE = False
 okt = None
 NLP_ENABLED = False
 
-# 터미널 색상 코드
-class Colors:
-    HEADER = '\033[95m'
-    BLUE = '\033[94m'
-    GREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    
-    @staticmethod
-    def colorize(text, color):
-        return f"{color}{text}{Colors.ENDC}"
-    
-    @staticmethod
-    def supports_color():
-        """터미널이 색상을 지원하는지 확인"""
-        plat = sys.platform
-        supported_platform = plat != 'win32' or 'ANSICON' in os.environ
-        is_a_tty = hasattr(sys.stdout, 'isatty') and sys.stdout.isatty()
-        return supported_platform and is_a_tty
 
 # 텍스트 분석을 위한 패키지 추가
 try:
@@ -208,9 +185,7 @@ except ImportError:
     TQDM_AVAILABLE = False
     print("tqdm이 설치되지 않았습니다. 진행 막대가 표시되지 않습니다. (pip install tqdm)")
 
-# 로깅 설정 수정 (levelename -> levelname)
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+# 로깅 설정은 파일 상단에서 한 번만 수행한다.
 
 # 스레드별 세션 관리
 thread_local = threading.local()
@@ -737,17 +712,6 @@ def save_to_csv(minwon_list, filename="정부24_민원목록.csv", output_dir=No
     
     logger.info(f"CSV 파일이 저장되었습니다: {file_path}")
     return file_path
-
-# 텍스트 분석 함수 및 설정 관련 변수
-NLP_ENABLED = False
-
-# 텍스트 분석 기능 설정 함수 추가
-def set_nlp_enabled(enabled=False):
-    """텍스트 분석 기능 활성화 여부 설정"""
-    global NLP_ENABLED
-    NLP_ENABLED = enabled
-    logger.info(f"텍스트 분석 기능: {'활성화' if NLP_ENABLED else '비활성화'}")
-    return NLP_ENABLED
 
 # 텍스트 분석 함수 추가
 def analyze_text(text, lang='ko'):
@@ -2297,8 +2261,7 @@ def filter_duplicate_minwons(minwon_list):
     logger.info(f"중복 필터링: {duplicates_count}개 중복 항목 검출, {len(unique_minwons)}개 고유 항목 유지")
     return list(unique_minwons.values())
 
-# NLP 활성화 상태 저장용 변수 추가
-NLP_ENABLED = False
+
 
 def main():
     """메인 함수 (개선됨)"""
