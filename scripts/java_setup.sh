@@ -187,7 +187,7 @@ print_summary() {
     echo -e "\n${YELLOW}모든 설정이 완료되면 다음 명령으로 크롤러를 실행하세요:${NC}"
     echo -e "  ${GREEN}./run.sh${NC}"
     echo -e "  또는"
-    echo -e "  ${GREEN}python3 crawler.py --cli${NC}"
+    echo -e "  ${GREEN}python3 -m hanolcare_crawler --cli${NC}"
 }
 
 # 메인 함수

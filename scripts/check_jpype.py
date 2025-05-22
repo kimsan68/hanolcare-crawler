@@ -125,7 +125,7 @@ def suggest_solutions():
     print("   pip install jpype1==0.7.5")
     print("   또는")
     print("   pip install JPype1-py3==0.5.5.4")
-    print("\n5. crawler.py 코드 수정:")
+    print("\n5. hanolcare_crawler 모듈 코드 수정:")
     print("   import jpype1 대신 try/except 블록 사용")
 
 if __name__ == "__main__":
